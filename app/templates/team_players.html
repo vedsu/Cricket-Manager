@@ -1,0 +1,173 @@
+{% extends "base.html" %}
+
+{% block title %}Team Players{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <a href="/teams" class="btn btn-dark btn-sm">Back</a>
+
+    <div>
+        <h2 class="fw-bold mb-0">{{ team.name }}</h2>
+        <small class="text-muted">{{ tournament.name if tournament else '' }}</small>
+    </div>
+
+    <button class="btn btn-dark btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#addPlayerForm">
+        Add Player
+    </button>
+</div>
+{% if error == "max_playing" %}
+<div class="alert alert-danger">
+    Maximum 9 players can be selected in Playing 9.
+</div>
+{% endif %}
+<div class="row g-3 mb-4">
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <h6 class="text-muted">Total Players</h6>
+                <h4 class="mb-0">{{ total_players if total_players is not none else 0 }}</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <h6 class="text-muted">Playing 9</h6>
+                <h4 class="mb-0">{{ playing_count if playing_count is not none else 0 }}</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <h6 class="text-muted">Substitutes</h6>
+                <h4 class="mb-0">{{ substitute_count if substitute_count is not none else 0 }}</h4>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="collapse mb-4" id="addPlayerForm">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h4 class="mb-3">Add Player</h4>
+
+            <form action="/teams/{{ team._id }}/players/add" method="post" enctype="multipart/form-data">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Player Name</label>
+                        <input type="text" name="name" class="form-control" required>
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Photo</label>
+                        <input type="file" name="photo" class="form-control" accept="image/*" capture="user">
+                    </div>
+
+                    <div class="col-md-3">
+                        <label class="form-label">Icon</label>
+                        <input type="file" name="icon" class="form-control" accept="image/*">
+                    </div>
+
+                    <div class="col-md-12">
+                        <label class="form-label d-block">Role</label>
+
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="roles" value="Batsman" id="role_batsman">
+                            <label class="form-check-label" for="role_batsman">Batsman</label>
+                        </div>
+
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="roles" value="Bowler" id="role_bowler">
+                            <label class="form-check-label" for="role_bowler">Bowler</label>
+                        </div>
+
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="checkbox" name="roles" value="Wicketkeeper" id="role_keeper">
+                            <label class="form-check-label" for="role_keeper">Wicketkeeper</label>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-dark">Save Player</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h4 class="mb-3">Players List</h4>
+
+        {% if players %}
+            <div class="row g-3">
+                {% for player in players %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="border rounded p-3 h-100 bg-white">
+                        <div class="d-flex align-items-start gap-3">
+                            <div>
+                                {% if player.photo %}
+                                    <img src="{{ player.photo }}" alt="Photo" style="height:70px; width:70px; object-fit:cover; border-radius:8px;">
+                                {% else %}
+                                    <div class="border rounded d-flex align-items-center justify-content-center" style="height:70px; width:70px;">
+                                        No Photo
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="flex-grow-1">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h5 class="mb-1">{{ player.name }}</h5>
+                                        <p class="mb-1">
+                                            <strong>Status:</strong>
+                                            {% if player.is_playing %}
+                                                Playing 9
+                                            {% else %}
+                                                Substitute
+                                            {% endif %}
+                                        </p>
+                                        <p class="mb-2">
+                                            <strong>Roles:</strong>
+                                            {% if player.roles %}
+                                                {{ player.roles | join(', ') }}
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        </p>
+                                    </div>
+
+                                    <div>
+                                        {% if player.icon %}
+                                            <img src="{{ player.icon }}" alt="Icon" style="height:36px; width:36px; object-fit:cover; border-radius:6px;">
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="d-flex gap-2 mt-3">
+                                    <form action="/players/{{ player._id }}/toggle-playing" method="post">
+                                        <button type="submit" class="btn btn-success btn-sm">
+                                            {% if player.is_playing %}Untick{% else %}Tick{% endif %}
+                                        </button>
+                                    </form>
+
+                                    <form action="/players/{{ player._id }}/delete" method="post" onsubmit="return confirm('Delete this player?');">
+                                        <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="mb-0">No players added yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

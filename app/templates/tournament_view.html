@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Tournament View{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <a href="/tournaments" class="btn btn-dark btn-sm">Back</a>
+    <div class="d-flex gap-2">
+        <a href="/tournaments/{{ tournament._id }}/edit" class="btn btn-dark btn-sm">Edit Tournament</a>
+        <a href="/tournaments/{{ tournament._id }}/teams" class="btn btn-outline-dark btn-sm">View Teams</a>
+    </div>
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        {% if tournament.logo %}
+        <img src="{{ tournament.logo }}" alt="Logo" class="mb-3" style="height:90px; width:90px; object-fit:cover;">
+        {% endif %}
+
+        <h3 class="fw-bold">{{ tournament.name }}</h3>
+        <p class="mb-1"><strong>Date:</strong> {{ tournament.match_date }}</p>
+        <p class="mb-0"><strong>Status:</strong> {{ tournament.status }}</p>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h4 class="mb-3">Teams</h4>
+
+        {% if teams %}
+            <div class="row g-3">
+                {% for team in teams %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="border rounded p-3 h-100 bg-light">
+                        {% if team.team_icon %}
+                        <img src="{{ team.team_icon }}" alt="Team Icon" class="mb-2" style="height:70px; width:70px; object-fit:cover;">
+                        {% endif %}
+                        <h6>{{ team.name }}</h6>
+                        <small>Coach: {{ team.coach.name }}</small><br>
+                        <small>Manager: {{ team.manager.name }}</small>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="mb-0">No teams added yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

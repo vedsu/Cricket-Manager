@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Tournaments{% endblock %}
+
+{% block content %}
+<div class=" d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <a href="/" class="btn btn-dark btn-sm">Back</a>
+    </div>
+    <div>
+        <a href="/tournaments/create" class="btn btn-dark btn-sm">Create Tournament</a>
+    </div>
+</div>
+
+<div class="mb-3">
+    <h2 class="fw-bold">Tournaments</h2>
+    <p class="text-muted">Available tournaments list</p>
+</div>
+
+<div class="row g-3">
+    {% if tournaments %}
+        {% for tournament in tournaments %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    {% if tournament.logo %}
+                        <img src="{{ tournament.logo }}" alt="Logo" class="img-fluid mb-3" style="height:80px; width:80px; object-fit:cover;">
+                    {% else %}
+                        <div class="mb-3 border rounded d-flex align-items-center justify-content-center" style="height:80px; width:80px;">
+                            No Logo
+                        </div>
+                    {% endif %}
+
+                    <h5 class="card-title">{{ tournament.name }}</h5>
+                    <p class="mb-1"><strong>Date:</strong> {{ tournament.match_date }}</p>
+                    <p class="mb-2"><strong>Status:</strong> {{ tournament.status }}</p>
+
+                    <div class="d-flex gap-2 mt-3">
+    <a href="/tournaments/{{ tournament._id }}/view" class="btn btn-outline-dark btn-sm">View</a>
+    <a href="/tournaments/{{ tournament._id }}/edit" class="btn btn-dark btn-sm">Edit</a>
+</div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <p class="mb-0">No tournaments found.</p>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

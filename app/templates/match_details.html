@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block title %}Match Details{% endblock %}
+
+{% block content %}
+<div class="dashboard-page">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h2 class="fw-bold mb-1">Match Details</h2>
+            <p class="mb-0 text-muted">{{ team1.name if team1 else '-' }} vs {{ team2.name if team2 else '-' }}</p>
+        </div>
+        <div class="d-flex gap-2">
+            <a href="/matches/{{ match._id }}/scoring" class="btn btn-dark btn-sm">Open Scoring</a>
+            <a href="/" class="btn btn-outline-dark btn-sm">Back</a>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-4 dashboard-card">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-3"><div class="meta-box"><small>Tournament</small><div class="fw-semibold">{{ tournament.name if tournament else '-' }}</div></div></div>
+                <div class="col-md-3"><div class="meta-box"><small>Date</small><div class="fw-semibold">{{ match.match_date if match.match_date else '-' }}</div></div></div>
+                <div class="col-md-3"><div class="meta-box"><small>Time</small><div class="fw-semibold">{{ match.match_time if match.match_time else '-' }}</div></div></div>
+                <div class="col-md-3"><div class="meta-box"><small>Status</small><div class="fw-semibold">{{ match.status|upper if match.status else '-' }}</div></div></div>
+                <div class="col-md-3"><div class="meta-box"><small>Round</small><div class="fw-semibold">{{ match.round_type if match.round_type else '-' }}</div></div></div>
+                <div class="col-md-3"><div class="meta-box"><small>Team 1</small><div class="fw-semibold">{{ team1.name if team1 else '-' }}</div></div></div>
+                <div class="col-md-3"><div class="meta-box"><small>Team 2</small><div class="fw-semibold">{{ team2.name if team2 else '-' }}</div></div></div>
+                <div class="col-md-3"><div class="meta-box"><small>Result</small><div class="fw-semibold">{{ match.result_text if match.result_text else '-' }}</div></div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 dashboard-card">
+        <div class="card-body">
+            <div class="section-head section-green mb-4">
+                <span class="section-icon">📘</span>
+                <div>
+                    <h4 class="mb-0">Innings Summary</h4>
+                    <small>Available innings for this match</small>
+                </div>
+            </div>
+
+            {% if innings_list %}
+            <div class="row g-3">
+                {% for innings in innings_list %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="match-box h-100">
+                        <h5 class="mb-2">Innings {{ innings.innings_number }}</h5>
+                        <div class="match-meta">
+                            <div><strong>Batting Team ID:</strong> {{ innings.batting_team_id if innings.batting_team_id else '-' }}</div>
+                            <div><strong>Bowling Team ID:</strong> {{ innings.bowling_team_id if innings.bowling_team_id else '-' }}</div>
+                            <div><strong>Score:</strong> {{ innings.total_runs if innings.total_runs is defined else 0 }}/{{ innings.wickets if innings.wickets is defined else 0 }}</div>
+                            <div><strong>Overs:</strong> {{ innings.overs if innings.overs is defined else 0.0 }}</div>
+                            <div><strong>Status:</strong> {{ innings.innings_status|upper if innings.innings_status else '-' }}</div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-box"><p class="mb-0">No innings data available yet.</p></div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

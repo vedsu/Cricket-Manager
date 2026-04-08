@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Player Stats{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">{{ player.name }}</h2>
+            <p class="text-muted mb-0">
+                {{ team.name if team else "-" }}
+                {% if tournament %} • {{ tournament.name }}{% endif %}
+            </p>
+        </div>
+        <a href="/search" class="btn btn-dark btn-sm">Back</a>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h4 class="mb-3">Batting</h4>
+                    <p><strong>Runs:</strong> {{ batting.runs }}</p>
+                    <p><strong>Balls:</strong> {{ batting.balls }}</p>
+                    <p><strong>Dismissals:</strong> {{ batting.dismissals }}</p>
+                    <p><strong>4s:</strong> {{ batting.fours }}</p>
+                    <p><strong>6s:</strong> {{ batting.sixes }}</p>
+                    <p class="mb-0"><strong>Strike Rate:</strong> {{ batting.strike_rate }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h4 class="mb-3">Bowling</h4>
+                    <p><strong>Overs:</strong> {{ bowling.overs }}</p>
+                    <p><strong>Runs Conceded:</strong> {{ bowling.runs_conceded }}</p>
+                    <p><strong>Wickets:</strong> {{ bowling.wickets }}</p>
+                    <p class="mb-0"><strong>Economy:</strong> {{ bowling.economy }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h4 class="mb-3">Fielding</h4>
+                    <p><strong>Catches:</strong> {{ fielding.catches }}</p>
+                    <p><strong>Run Outs:</strong> {{ fielding.runouts }}</p>
+                    <p class="mb-0"><strong>Stumpings:</strong> {{ fielding.stumpings }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

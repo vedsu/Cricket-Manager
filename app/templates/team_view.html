@@ -1,0 +1,200 @@
+{% extends "base.html" %}
+
+{% block title %}Team Details{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div class="d-flex align-items-center gap-3 flex-wrap">
+            {% if team.team_icon %}
+                <img src="{{ team.team_icon }}" alt="{{ team.name }}" style="width:70px;height:70px;object-fit:cover;border-radius:12px;">
+            {% endif %}
+            <div>
+                <h2 class="fw-bold mb-1">{{ team.name }}</h2>
+                <p class="text-muted mb-0">
+                    {% if tournament %}{{ tournament.name }}{% else %}Tournament not assigned{% endif %}
+                </p>
+            </div>
+        </div>
+
+        <div class="d-flex gap-2 flex-wrap">
+            <a href="/teams/{{ team._id }}/players" class="btn btn-outline-dark btn-sm">Manage Players</a>
+            <a href="/teams" class="btn btn-dark btn-sm">Back</a>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-2">
+            <div class="card shadow-sm text-center h-100">
+                <div class="card-body">
+                    <small>Total Played</small>
+                    <h3 class="mb-0">{{ total_played }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="card shadow-sm text-center h-100">
+                <div class="card-body">
+                    <small>Wins</small>
+                    <h3 class="mb-0 text-success">{{ total_wins }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="card shadow-sm text-center h-100">
+                <div class="card-body">
+                    <small>Losses</small>
+                    <h3 class="mb-0 text-danger">{{ total_losses }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="card shadow-sm text-center h-100">
+                <div class="card-body">
+                    <small>Tied</small>
+                    <h3 class="mb-0">{{ total_tied }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="card shadow-sm text-center h-100">
+                <div class="card-body">
+                    <small>Abandoned</small>
+                    <h3 class="mb-0">{{ total_abandoned }}</h3>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-2">
+            <div class="card shadow-sm text-center h-100">
+                <div class="card-body">
+                    <small>Win %</small>
+                    <h3 class="mb-0">{{ win_percentage }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-lg-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h4 class="mb-3">Team Information</h4>
+
+                    <p class="mb-2"><strong>Coach:</strong>
+                        {% if team.coach %}
+                            {{ team.coach.name }} ({{ team.coach.contact }})
+                        {% else %}
+                            -
+                        {% endif %}
+                    </p>
+
+                    <p class="mb-2"><strong>Manager:</strong>
+                        {% if team.manager %}
+                            {{ team.manager.name }} ({{ team.manager.contact }})
+                        {% else %}
+                            -
+                        {% endif %}
+                    </p>
+
+                    <p class="mb-2"><strong>Total Players:</strong> {{ total_players }}</p>
+                    <p class="mb-0"><strong>Playing 9 Selected:</strong> {{ playing_count }}/9</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h4 class="mb-3">Suggestions</h4>
+                    <ul class="mb-0">
+                        <li>Later we can add team total runs, wickets, and net run rate.</li>
+                        <li>We can also add top batter, top bowler, and top fielder for this team.</li>
+                        <li>Head-to-head records can also be added tournament-wise.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="mb-3">Recent Match Results</h4>
+
+            {% if recent_results %}
+                <div class="list-group">
+                    {% for match in recent_results %}
+                    <a href="/matches/{{ match._id }}/details" class="list-group-item list-group-item-action">
+                        <div class="fw-semibold">
+                            {{ match.team1_name }} vs {{ match.team2_name }}
+                        </div>
+                        <small class="text-muted">
+                            {{ match.match_date }} • {{ match.round_type }}
+                        </small>
+                        <div class="mt-1 text-success">
+                            {{ match.result_text }}
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-light mb-0">No completed match results available for this team.</div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h4 class="mb-3">Players</h4>
+
+            {% if players %}
+                <div class="row g-3">
+                    {% for player in players %}
+                    <div class="col-md-6 col-lg-4">
+                        <a href="/players/{{ player._id }}/stats-view" class="text-decoration-none text-dark">
+                            <div class="card h-100 border">
+                                <div class="card-body d-flex align-items-center gap-3">
+                                    {% if player.photo %}
+                                        <img src="{{ player.photo }}" alt="{{ player.name }}" style="width:56px;height:56px;object-fit:cover;border-radius:10px;">
+                                    {% else %}
+                                        <div style="width:56px;height:56px;border-radius:10px;background:#f1f1f1;display:flex;align-items:center;justify-content:center;">
+                                            👤
+                                        </div>
+                                    {% endif %}
+
+                                    <div>
+                                        <div class="fw-semibold">{{ player.name }}</div>
+                                        <small class="text-muted">
+                                            {% if player.roles %}
+                                                {{ player.roles|join(", ") }}
+                                            {% else %}
+                                                No role assigned
+                                            {% endif %}
+                                        </small>
+                                        <div class="mt-1">
+                                            {% if player.is_playing %}
+                                                <span class="badge bg-success">Playing</span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">Squad</span>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="alert alert-light mb-0">No players found for this team.</div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+{% endblock %}

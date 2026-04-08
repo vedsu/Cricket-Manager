@@ -1,0 +1,367 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-page">
+
+    <div class="dashboard-hero mb-4">
+        <div>
+            <p class="mb-0">Live matches, tournaments, upcoming fixtures, match history, and analytics</p>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-4 dashboard-card">
+        <div class="card-body">
+            <div class="section-head section-orange mb-3">
+                <span class="section-icon">🔎</span>
+                <div>
+                    <h4 class="mb-0">Global Search</h4>
+                    <small>Search players, teams, tournaments, or matches</small>
+                </div>
+            </div>
+
+            <form method="get" action="/search">
+                <div class="row g-3 align-items-end">
+                    <div class="col-lg-8">
+                        <label class="form-label">Search</label>
+                        <input
+                            type="text"
+                            name="q"
+                            class="form-control"
+                            placeholder="Search player, team, tournament, or match"
+                        >
+                    </div>
+
+                    <div class="col-lg-2">
+                        <label class="form-label">Type</label>
+                        <select name="type" class="form-select">
+                            <option value="">All</option>
+                            <option value="player">Player</option>
+                            <option value="team">Team/Match</option>
+                            <option value="tournament">Tournament</option>
+                            <!-- <option value="match">Match</option> -->
+                        </select>
+                    </div>
+
+                    <div class="col-lg-2 d-grid">
+                        <button type="submit" class="btn btn-dark">Search</button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="mt-3 border rounded p-3 bg-light">
+                <small class="text-muted">
+                    Search across players, teams, tournaments, and matches.
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="summary-box summary-dark text-center">
+                <small>Live Matches</small>
+                <h3 class="mb-0">{{ live_matches|length if live_matches else 0 }}</h3>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="summary-box summary-purple text-center">
+                <small>Upcoming Matches</small>
+                <h3 class="mb-0">{{ upcoming_matches|length if upcoming_matches else 0 }}</h3>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="summary-box summary-green text-center">
+                <small>Completed Matches</small>
+                <h3 class="mb-0">{{ recent_matches|length if recent_matches else 0 }}</h3>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="summary-box summary-orange text-center">
+                <small>Tournaments</small>
+                <h3 class="mb-0">{{ tournaments|length if tournaments else 0 }}</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-4 dashboard-card">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <div class="section-head section-pink">
+                    <span class="section-icon">🔴</span>
+                    <div>
+                        <h4 class="mb-0">Live Matches</h4>
+                        <small>Click to open live scoring</small>
+                    </div>
+                </div>
+
+                <a href="/live-match" class="btn btn-outline-dark btn-sm">View All</a>
+            </div>
+
+            {% if live_matches %}
+                <div class="row g-3">
+                    {% for match in live_matches %}
+                    <div class="col-md-6 col-lg-4">
+                        <a href="/matches/{{ match._id }}/scoring" class="text-decoration-none">
+                            <div class="match-box match-live h-100">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="match-tag">{{ match.tournament_name if match.tournament_name else "-" }}</span>
+                                    <span class="status-pill live-pill">LIVE</span>
+                                </div>
+
+                                <h5 class="mb-2">{{ match.team1_name }} vs {{ match.team2_name }}</h5>
+
+                                <div class="match-meta mb-2">
+                                    <div><strong>Score:</strong> {{ match.score if match.score else "0/0" }}</div>
+                                    <div><strong>Overs:</strong> {{ match.overs if match.overs else "0.0" }}</div>
+                                    <div><strong>Round:</strong> {{ match.round_type if match.round_type else "-" }}</div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-box">
+                    <p class="mb-0">No live matches right now.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 dashboard-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                        <div class="section-head section-purple">
+                            <span class="section-icon">📅</span>
+                            <div>
+                                <h4 class="mb-0">Upcoming Matches</h4>
+                                <small>Click to open fixture details</small>
+                            </div>
+                        </div>
+
+                        <a href="/matches/new" class="btn btn-outline-dark btn-sm">View All</a>
+                    </div>
+
+                    {% if upcoming_matches %}
+                        <div class="dashboard-list">
+                            {% for match in upcoming_matches %}
+                            <a href="/matches/{{ match._id }}/details" class="dashboard-list-item text-decoration-none">
+                                <div>
+                                    <div class="fw-semibold">
+                                        {{ match.match_date if match.match_date else "-" }} |
+                                        {{ match.team1_name }} vs {{ match.team2_name }}
+                                    </div>
+                                    <small class="text-muted">
+                                        {{ match.match_time if match.match_time else "-" }} •
+                                        {{ match.round_type if match.round_type else "-" }}
+                                    </small>
+                                </div>
+                                <span class="status-pill upcoming-pill">UPCOMING</span>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="empty-box">
+                            <p class="mb-0">No upcoming matches.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card shadow-sm border-0 dashboard-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                        <div class="section-head section-green">
+                            <span class="section-icon">📘</span>
+                            <div>
+                                <h4 class="mb-0">Recent Match History</h4>
+                                <small>Click to open match details</small>
+                            </div>
+                        </div>
+
+                        <a href="/match-history" class="btn btn-outline-dark btn-sm">View All</a>
+                    </div>
+
+                    {% if recent_matches %}
+                        <div class="dashboard-list">
+                            {% for match in recent_matches %}
+                            <a href="/matches/{{ match._id }}/details" class="dashboard-list-item text-decoration-none">
+                                <div>
+                                    <div class="fw-semibold">
+                                        {{ match.result_text if match.result_text else (match.team1_name ~ " vs " ~ match.team2_name) }}
+                                    </div>
+                                    <small class="text-muted">
+                                        {{ match.match_date if match.match_date else "-" }} •
+                                        {{ match.round_type if match.round_type else "-" }}
+                                    </small>
+                                </div>
+                                <span class="status-pill completed-pill">DONE</span>
+                            </a>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="empty-box">
+                            <p class="mb-0">No recent completed matches.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-4 dashboard-card">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <div class="section-head section-orange">
+                    <span class="section-icon">🏆</span>
+                    <div>
+                        <h4 class="mb-0">Tournaments</h4>
+                        <small>Click to open tournament dashboard</small>
+                    </div>
+                </div>
+
+                <a href="/tournaments" class="btn btn-outline-dark btn-sm">View All</a>
+            </div>
+
+            {% if tournaments %}
+                <div class="row g-3">
+                    {% for tournament in tournaments %}
+                    <div class="col-md-6 col-lg-4">
+                        <a href="/tournaments/{{ tournament._id }}/view" class="text-decoration-none">
+                            <div class="match-box match-upcoming h-100">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <span class="match-tag">{{ tournament.status if tournament.status else "Active" }}</span>
+                                    <span class="status-pill upcoming-pill">
+                                        {{ tournament.status|upper if tournament.status else "ACTIVE" }}
+                                    </span>
+                                </div>
+
+                                <h5 class="mb-2">{{ tournament.name }}</h5>
+
+                                <div class="match-meta">
+                                    <div><strong>Date:</strong> {{ tournament.match_date if tournament.match_date else "-" }}</div>
+                                    <div><strong>Live Matches:</strong> {{ tournament.live_count if tournament.live_count is defined else 0 }}</div>
+                                    <div><strong>Upcoming:</strong> {{ tournament.upcoming_count if tournament.upcoming_count is defined else 0 }}</div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-box">
+                    <p class="mb-0">No tournaments available.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 dashboard-card">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <div class="section-head section-grey">
+                    <span class="section-icon">📈</span>
+                    <div>
+                        <h4 class="mb-0">Tournament Analytics</h4>
+                        <small>Top performers preview by tournament</small>
+                    </div>
+                </div>
+
+                <a href="/tournaments" class="btn btn-outline-dark btn-sm">Open Tournaments</a>
+            </div>
+
+            {% if tournament_analytics %}
+                <div class="row g-4">
+                    {% for item in tournament_analytics %}
+                    <div class="col-lg-6">
+                        <div class="analytics-box h-100">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="mb-0">{{ item.tournament_name }}</h5>
+                                <span class="match-tag">Analytics</span>
+                            </div>
+
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <div class="mini-analytics-card">
+                                        <h6 class="mb-2">Top 3 Batters</h6>
+                                        <ul class="mb-0 analytics-list">
+                                            {% if item.top_batters %}
+                                                {% for batter in item.top_batters %}
+                                                <li>
+                                                    <span>{{ batter.name }}</span>
+                                                    <small>{{ batter.runs }} runs • SR {{ batter.strike_rate }}</small>
+                                                </li>
+                                                {% endfor %}
+                                            {% else %}
+                                                <li><span>No data</span></li>
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="mini-analytics-card">
+                                        <h6 class="mb-2">Top 3 Bowlers</h6>
+                                        <ul class="mb-0 analytics-list">
+                                            {% if item.top_bowlers %}
+                                                {% for bowler in item.top_bowlers %}
+                                                <li>
+                                                    <span>{{ bowler.name }}</span>
+                                                    <small>{{ bowler.wickets }} wickets • Eco {{ bowler.economy }}</small>
+                                                </li>
+                                                {% endfor %}
+                                            {% else %}
+                                                <li><span>No data</span></li>
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="mini-analytics-card">
+                                        <h6 class="mb-2">Top Fielders</h6>
+                                        <ul class="mb-0 analytics-list">
+                                            {% if item.top_fielders %}
+                                                {% for fielder in item.top_fielders %}
+                                                <li>
+                                                    <span>{{ fielder.name }}</span>
+                                                    <small>
+                                                        Catches {{ fielder.catches }} •
+                                                        Run Outs {{ fielder.runouts }} •
+                                                        Stumpings {{ fielder.stumpings }}
+                                                    </small>
+                                                </li>
+                                                {% endfor %}
+                                            {% else %}
+                                                <li><span>No data</span></li>
+                                            {% endif %}
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-box">
+                    <p class="mb-0">Tournament analytics will appear here once match data is available.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

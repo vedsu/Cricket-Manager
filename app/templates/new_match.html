@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+
+{% block title %}New Match{% endblock %}
+
+{% block content %}
+
+<!-- Page Header -->
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <a href="/" class="btn btn-dark btn-sm">Back</a>
+
+    <div>
+        <h2 class="fw-bold mb-0">New Match</h2>
+        <small class="text-muted">Setup fixture by tournament</small>
+    </div>
+</div>
+
+<!-- Tournament Selection -->
+{% if not selected_tournament %}
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h4 class="mb-3">Select Tournament</h4>
+
+        <div class="row g-3">
+            {% if tournaments %}
+                {% for tournament in tournaments %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 border">
+                        <div class="card-body">
+                            {% if tournament.logo %}
+                                <img src="{{ tournament.logo }}" alt="Tournament Logo" class="mb-3" style="height:70px; width:70px; object-fit:cover; border-radius:8px;">
+                            {% endif %}
+
+                            <h5 class="mb-1">{{ tournament.name }}</h5>
+                            <p class="mb-1"><strong>Date:</strong> {{ tournament.match_date }}</p>
+                            <p class="mb-3"><strong>Status:</strong> {{ tournament.status }}</p>
+
+                            <a href="/matches/new/{{ tournament._id }}" class="btn btn-dark btn-sm">Open Fixtures</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="col-12">
+                    <p class="mb-0">No tournaments available.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Selected Tournament -->
+{% if selected_tournament %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+    <a href="/matches/new" class="btn btn-dark btn-sm">Back to Tournaments</a>
+
+    <div>
+        <h3 class="fw-bold mb-0">{{ selected_tournament.name }}</h3>
+        <small class="text-muted">Fixtures for selected tournament</small>
+    </div>
+
+    <button class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#createFixtureModal">
+        Create Fixture
+    </button>
+</div>
+
+<!-- Success Alert -->
+{% if success == "fixture_created" %}
+<div class="alert alert-success">Fixture created successfully.</div>
+{% endif %}
+
+<!-- Existing Fixtures -->
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+        <h4 class="mb-3">Existing Fixtures</h4>
+
+        {% if fixtures %}
+            <div class="row g-3">
+                {% for fixture in fixtures %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="card border h-100">
+                        <div class="card-body">
+                            <h5 class="mb-2">{{ fixture.team1_name }} vs {{ fixture.team2_name }}</h5>
+                            <p class="mb-1"><strong>Date:</strong> {{ fixture.match_date }}</p>
+                            <p class="mb-1"><strong>Time:</strong> {{ fixture.match_time }}</p>
+                            <p class="mb-1"><strong>Round:</strong> {{ fixture.round_type }}</p>
+                            <p class="mb-3"><strong>Status:</strong> {{ fixture.status }}</p>
+
+                            <div class="d-flex gap-2">
+                                <a href="/matches/{{ fixture._id }}/edit" class="btn btn-outline-dark btn-sm">Edit</a>
+                                <form action="/matches/{{ fixture._id }}/delete" method="post" onsubmit="return confirm('Delete this fixture?');">
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="mb-0">No fixtures created yet.</p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Create Fixture Modal -->
+<div class="modal fade" id="createFixtureModal" tabindex="-1" aria-labelledby="createFixtureModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h5 class="modal-title" id="createFixtureModalLabel">Create Fixture</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+
+                {% if error == "same_team" %}
+                <div class="alert alert-danger">Team 1 and Team 2 cannot be the same.</div>
+                {% endif %}
+
+                {% if error == "duplicate_fixture" %}
+                <div class="alert alert-danger">This fixture already exists.</div>
+                {% endif %}
+
+                {% if error == "not_enough_teams" %}
+                <div class="alert alert-danger">At least 2 teams are required to create a fixture.</div>
+                {% endif %}
+
+                <form action="/matches/create" method="post">
+                    <input type="hidden" name="tournament_id" value="{{ selected_tournament._id }}">
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label class="form-label">Team 1</label>
+                            <select name="team1_id" id="modalTeam1" class="form-select" required>
+                                <option value="">Select Team 1</option>
+                                {% for team in teams %}
+                                    <option value="{{ team._id }}">{{ team.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label">Team 2</label>
+                            <select name="team2_id" id="modalTeam2" class="form-select" required>
+                                <option value="">Select Team 2</option>
+                                {% for team in teams %}
+                                    <option value="{{ team._id }}">{{ team.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Match Date</label>
+                            <input type="date" name="match_date" class="form-control" required>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Match Time</label>
+                            <input type="time" name="match_time" class="form-control" required>
+                        </div>
+
+                        <div class="col-md-4">
+                            <label class="form-label">Round Type</label>
+                            <select name="round_type" class="form-select" required>
+                                <option value="">Select Round</option>
+                                <option value="League">League</option>
+                                <option value="Semi Final">Semi Final</option>
+                                <option value="Final">Final</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="mt-4 text-end">
+                        <button type="submit" class="btn btn-dark">Save Fixture</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Team 1 / Team 2 filtering -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const team1 = document.getElementById("modalTeam1");
+    const team2 = document.getElementById("modalTeam2");
+
+    if (team1 && team2) {
+        team1.addEventListener("change", function () {
+            const selectedValue = this.value;
+
+            Array.from(team2.options).forEach(option => {
+                option.hidden = false;
+            });
+
+            if (selectedValue) {
+                Array.from(team2.options).forEach(option => {
+                    if (option.value === selectedValue) {
+                        option.hidden = true;
+                    }
+                });
+
+                if (team2.value === selectedValue) {
+                    team2.value = "";
+                }
+            }
+        });
+    }
+});
+</script>
+
+<!-- Reopen modal on error -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const error = "{{ error }}";
+    if (error) {
+        const modalElement = document.getElementById("createFixtureModal");
+        if (modalElement) {
+            const modal = new bootstrap.Modal(modalElement);
+            modal.show();
+        }
+    }
+});
+</script>
+
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Match{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <a href="/matches/new/{{ match.tournament_id }}" class="btn btn-dark btn-sm">Back</a>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h2 class="fw-bold mb-3">Edit Fixture</h2>
+
+        <form action="/matches/{{ match._id }}/edit" method="post">
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label class="form-label">Team 1</label>
+                    <select name="team1_id" class="form-select" required>
+                        {% for team in teams %}
+                            <option value="{{ team._id }}" {% if team._id|string == match.team1_id %}selected{% endif %}>
+                                {{ team.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="form-label">Team 2</label>
+                    <select name="team2_id" class="form-select" required>
+                        {% for team in teams %}
+                            <option value="{{ team._id }}" {% if team._id|string == match.team2_id %}selected{% endif %}>
+                                {{ team.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Match Date</label>
+                    <input type="date" name="match_date" class="form-control" value="{{ match.match_date }}" required>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Match Time</label>
+                    <input type="time" name="match_time" class="form-control" value="{{ match.match_time }}" required>
+                </div>
+
+                <div class="col-md-4">
+                    <label class="form-label">Round Type</label>
+                    <select name="round_type" class="form-select" required>
+                        <option value="League" {% if match.round_type == "League" %}selected{% endif %}>League</option>
+                        <option value="Semi Final" {% if match.round_type == "Semi Final" %}selected{% endif %}>Semi Final</option>
+                        <option value="Final" {% if match.round_type == "Final" %}selected{% endif %}>Final</option>
+                    </select>
+                </div>
+
+                <div class="col-12">
+                    <button type="submit" class="btn btn-dark">Update Fixture</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

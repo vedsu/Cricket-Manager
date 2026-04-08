@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Teams{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <a href="/tournaments/{{ tournament._id }}/view" class="btn btn-dark btn-sm">Back</a>
+    <a href="/tournaments/{{ tournament._id }}/teams/create" class="btn btn-dark btn-sm">Create Team</a>
+</div>
+
+<div class="mb-3">
+    <h2 class="fw-bold">Teams - {{ tournament.name }}</h2>
+    <p class="text-muted">Manage teams inside selected tournament</p>
+</div>
+
+<div class="row g-3">
+    {% if teams %}
+        {% for team in teams %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    {% if team.team_icon %}
+                    <img src="{{ team.team_icon }}" alt="Team Icon" class="mb-3" style="height:80px; width:80px; object-fit:cover;">
+                    {% endif %}
+
+                    <h5>{{ team.name }}</h5>
+                    <p class="mb-1"><strong>Coach:</strong> {{ team.coach.name }} ({{ team.coach.contact }})</p>
+                    <p class="mb-3"><strong>Manager:</strong> {{ team.manager.name }} ({{ team.manager.contact }})</p>
+
+                    <a href="/teams/{{ team._id }}/edit" class="btn btn-outline-dark btn-sm">Edit</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <p class="mb-0">No teams added yet.</p>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

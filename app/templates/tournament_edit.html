@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Tournament{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <a href="/tournaments" class="btn btn-dark btn-sm">Back</a>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h2 class="fw-bold mb-3">Edit Tournament</h2>
+
+        <form action="/tournaments/{{ tournament._id }}/edit" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label class="form-label">Tournament Name</label>
+                <input type="text" name="name" class="form-control" value="{{ tournament.name }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Date (dd-mm-yyyy)</label>
+                <input type="text" name="match_date" class="form-control" value="{{ tournament.match_date }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Tournament Logo</label>
+                <input type="file" name="logo" class="form-control" accept="image/*">
+            </div>
+
+            {% if tournament.logo %}
+            <div class="mb-3">
+                <img src="{{ tournament.logo }}" alt="Logo" style="height:80px; width:80px; object-fit:cover;">
+            </div>
+            {% endif %}
+
+            <button type="submit" class="btn btn-dark">Update Tournament</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

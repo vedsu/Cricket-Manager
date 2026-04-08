@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Match History{% endblock %}
+
+{% block content %}
+<div class="dashboard-page">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h2 class="fw-bold mb-1">Match History</h2>
+            <p class="mb-0 text-muted">Completed matches and final results</p>
+        </div>
+        <a href="/" class="btn btn-dark btn-sm">Back to Dashboard</a>
+    </div>
+
+    {% if matches %}
+    <div class="row g-3">
+        {% for match in matches %}
+        <div class="col-md-6 col-lg-4">
+            <div class="card shadow-sm border-0 dashboard-card h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <span class="match-tag">{{ match.tournament_name if match.tournament_name else '-' }}</span>
+                        <span class="status-pill completed-pill">DONE</span>
+                    </div>
+                    <h5 class="mb-2">{{ match.team1_name }} vs {{ match.team2_name }}</h5>
+                    <div class="match-meta mb-3">
+                        <div><strong>Date:</strong> {{ match.match_date if match.match_date else '-' }}</div>
+                        <div><strong>Round:</strong> {{ match.round_type if match.round_type else '-' }}</div>
+                        {% if match.team1_score is defined %}<div><strong>{{ match.team1_name }}:</strong> {{ match.team1_score if match.team1_score else '-' }}</div>{% endif %}
+                        {% if match.team2_score is defined %}<div><strong>{{ match.team2_name }}:</strong> {{ match.team2_score if match.team2_score else '-' }}</div>{% endif %}
+                    </div>
+                    <p class="mb-3 fw-semibold">{{ match.result_text if match.result_text else (match.team1_name ~ ' vs ' ~ match.team2_name) }}</p>
+                    <div class="d-flex gap-2">
+                        <a href="/matches/{{ match._id }}/details" class="btn btn-outline-dark btn-sm">Details</a>
+                        <a href="/matches/{{ match._id }}/scoring" class="btn btn-dark btn-sm">Scorecard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-box"><p class="mb-0">No completed matches available.</p></div>
+    {% endif %}
+</div>
+{% endblock %}

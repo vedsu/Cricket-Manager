@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% block title %}Official Rules{% endblock %}
+
+{% block content %}
+
+<div class="rules-page">
+    <div class="rules-hero mb-4">
+        <div>
+            <!-- <h2 class="fw-bold mb-1">Official Rules</h2> -->
+            <p class="mb-0">30 Yard Cricket Rules</p>
+        </div>
+        <div class="rules-badge">Fast • Family Friendly • Competitive</div>
+    </div>
+
+    <!-- Core Gameplay Rules -->
+    <div class="card shadow-sm border-0 mb-4 rules-card">
+        <div class="card-body">
+            <div class="section-head section-purple mb-4">
+                <span class="section-icon">🏏</span>
+                <div>
+                    <h4 class="mb-0">Core Gameplay Rules</h4>
+                    <small>Gameplay fundamentals</small>
+                </div>
+            </div>
+
+            <div class="rule-item">
+                <div class="rule-number">1</div>
+                <div>
+                    <h6>Bowling Action</h6>
+                    <p>Strictly under-arm, released below waist level. Any over-arm or side-arm is a No-Ball.</p>
+                </div>
+            </div>
+
+            <div class="rule-item">
+                <div class="rule-number">2</div>
+                <div>
+                    <h6>The Bounce</h6>
+                    <p>Ball must bounce at least once before the popping crease. Full-toss above knee is a No-Ball.</p>
+                </div>
+            </div>
+
+            <div class="rule-item rule-highlight">
+                <div class="rule-number">3</div>
+                <div>
+                    <h6>The "Six-is-Out" Rule (USP)</h6>
+                    <p class="mb-1">If the ball clears the boundary on the full, the batsman is OUT.</p>
+                    <p class="mb-0">If it bounces and goes over, it is 4 Runs.</p>
+                </div>
+            </div>
+
+            <div class="rule-item">
+                <div class="rule-number">4</div>
+                <div>
+                    <h6>No-Bounce Zone</h6>
+                    <p>The first bounce must occur in the middle or second half of the pitch. Skipping the bounce in the initial safety zone is a Dead Ball.</p>
+                </div>
+            </div>
+
+            <div class="rule-item">
+                <div class="rule-number">5</div>
+                <div>
+                    <h6>Dismissals</h6>
+                    <div class="tag-wrap mb-2">
+                        <span class="rule-tag">Bowled</span>
+                        <span class="rule-tag">Caught</span>
+                        <span class="rule-tag">Run Out</span>
+                        <span class="rule-tag">Stumped</span>
+                        <span class="rule-tag danger-tag">Six-Out</span>
+                    </div>
+                    <p class="mb-0"><strong>No LBW</strong></p>
+                </div>
+            </div>
+
+            <div class="rule-item mb-0">
+                <div class="rule-number">6</div>
+                <div>
+                    <h6>Extras</h6>
+                    <p class="mb-0">Wide Ball and No-Ball grant 1 Run plus extra delivery. No Free Hits or Powerplays.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ground & Pitch -->
+    <div class="card shadow-sm border-0 mb-4 rules-card">
+        <div class="card-body">
+            <div class="section-head section-orange mb-4">
+                <span class="section-icon">📏</span>
+                <div>
+                    <h4 class="mb-0">Ground & Pitch Specifications</h4>
+                    <small>Dimensions and layout</small>
+                </div>
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <div class="spec-box spec-purple">
+                        <h6>Boundary</h6>
+                        <p class="mb-0">15 to 25 meters</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="spec-box spec-orange">
+                        <h6>Pitch</h6>
+                        <p class="mb-0">14 to 16m length<br>2.5 to 3m width</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="spec-box spec-green">
+                        <h6>Surface</h6>
+                        <p class="mb-0">Turf Mat or Artificial Grass</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card border-0 pitch-card mb-3">
+                <div class="card-body">
+                    <h6 class="mb-3">Crease Markings</h6>
+                    <div class="tag-wrap">
+                        <span class="rule-tag">Popping crease: 1.22m</span>
+                        <span class="rule-tag">Wide lines: 0.75m from center</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pitch-layout">
+<pre class="mb-0">
+    PITCH LAYOUT (NOT TO SCALE)
+    ┌─────────────────────────┐
+    │      BATTING END        │
+    │  ═════════════════════  │ Popping Crease
+    │         3m              │
+    │                         │
+    │      14-16m Pitch       │
+    │                         │
+    │         3m              │
+    │  ═════════════════════  │ Popping Crease
+    │      BOWLING END        │
+    └─────────────────────────┘
+</pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- Match Format -->
+    <div class="card shadow-sm border-0 rules-card">
+        <div class="card-body">
+            <div class="section-head section-green mb-4">
+                <span class="section-icon">⚡</span>
+                <div>
+                    <h4 class="mb-0">Match Format</h4>
+                    <small>Quick match structure</small>
+                </div>
+            </div>
+
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <div class="spec-box spec-grey text-center">
+                        <h6>Overs</h6>
+                        <p class="mb-0">6 Overs per innings</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="spec-box spec-pink text-center">
+                        <h6>Squad</h6>
+                        <p class="mb-0">11 Players, 9 playing</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="spec-box spec-green text-center">
+                        <h6>Style</h6>
+                        <p class="mb-0">Fast-paced format</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

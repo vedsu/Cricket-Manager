@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">Search Results</h2>
+            <p class="text-muted mb-0">Query: {{ q if q else "-" }}</p>
+        </div>
+        <a href="/" class="btn btn-dark btn-sm">Back</a>
+    </div>
+
+    {% if results.players %}
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="mb-3">Players</h4>
+            <div class="list-group">
+                {% for player in results.players %}
+                <a href="/players/{{ player._id }}/stats-view" class="list-group-item list-group-item-action">
+                    <div class="fw-semibold">{{ player.name }}</div>
+                    <small class="text-muted">Open full stats and details</small>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if results.teams %}
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="mb-3">Teams</h4>
+            <div class="list-group">
+                {% for team in results.teams %}
+                <a href="/teams/{{ team._id }}/view" class="list-group-item list-group-item-action">
+                    <div class="fw-semibold">{{ team.name }}</div>
+                    <small class="text-muted">Open team details</small>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if results.tournaments %}
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="mb-3">Tournaments</h4>
+            <div class="list-group">
+                {% for tournament in results.tournaments %}
+                <a href="/tournaments/{{ tournament._id }}/view" class="list-group-item list-group-item-action">
+                    <div class="fw-semibold">{{ tournament.name }}</div>
+                    <small class="text-muted">Open tournament dashboard</small>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if results.matches %}
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h4 class="mb-3">Matches</h4>
+            <div class="list-group">
+                {% for match in results.matches %}
+                <a href="/matches/{{ match._id }}/details" class="list-group-item list-group-item-action">
+                    <div class="fw-semibold">
+                        {{ match.team1_name if match.team1_name else "-" }} vs {{ match.team2_name if match.team2_name else "-" }}
+                    </div>
+                    <small class="text-muted">{{ match.match_date if match.match_date else "-" }} • {{ match.round_type if match.round_type else "-" }}</small>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if not results.players and not results.teams and not results.tournaments and not results.matches %}
+    <div class="alert alert-light">No results found.</div>
+    {% endif %}
+</div>
+{% endblock %}

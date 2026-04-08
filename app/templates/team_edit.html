@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Team{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <a href="/tournaments/{{ tournament._id }}/teams" class="btn btn-dark btn-sm">Back</a>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h2 class="fw-bold mb-3">Edit Team - {{ team.name }}</h2>
+
+        <form action="/teams/{{ team._id }}/edit" method="post" enctype="multipart/form-data">
+            <div class="mb-3">
+                <label class="form-label">Team Name</label>
+                <input type="text" name="name" class="form-control" value="{{ team.name }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Team Icon</label>
+                <input type="file" name="team_icon" class="form-control" accept="image/*">
+            </div>
+
+            {% if team.team_icon %}
+            <div class="mb-3">
+                <img src="{{ team.team_icon }}" alt="Team Icon" style="height:80px; width:80px; object-fit:cover;">
+            </div>
+            {% endif %}
+
+            <div class="mb-3">
+                <label class="form-label">Coach Name</label>
+                <input type="text" name="coach_name" class="form-control" value="{{ team.coach.name }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Coach Contact Number</label>
+                <input type="text" name="coach_contact" class="form-control" value="{{ team.coach.contact }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Manager Name</label>
+                <input type="text" name="manager_name" class="form-control" value="{{ team.manager.name }}" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Manager Contact Number</label>
+                <input type="text" name="manager_contact" class="form-control" value="{{ team.manager.contact }}" required>
+            </div>
+
+            <button type="submit" class="btn btn-dark">Update Team</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

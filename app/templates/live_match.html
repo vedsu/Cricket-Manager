@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}Live Matches{% endblock %}
+
+{% block content %}
+<div class="dashboard-page">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+        <div>
+            <h2 class="fw-bold mb-1">Live Match Center</h2>
+            <p class="mb-0 text-muted">Track live and upcoming matches</p>
+        </div>
+        <a href="/" class="btn btn-dark btn-sm">Back to Dashboard</a>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-4 dashboard-card">
+        <div class="card-body">
+            <form method="get" action="/live-match">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-4">
+                        <label class="form-label">Match Date</label>
+                        <input type="date" name="match_date" class="form-control" value="{{ match_date }}">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Team Search</label>
+                        <input type="text" name="team_search" class="form-control" value="{{ team_search }}" placeholder="Search by team name">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Status</label>
+                        <select name="status" class="form-select">
+                            <option value="" {% if not status %}selected{% endif %}>All</option>
+                            <option value="live" {% if status == 'live' %}selected{% endif %}>Live</option>
+                            <option value="upcoming" {% if status == 'upcoming' %}selected{% endif %}>Upcoming</option>
+                            <option value="completed" {% if status == 'completed' %}selected{% endif %}>Completed</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2 d-grid">
+                        <button type="submit" class="btn btn-dark">Apply</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 mb-4 dashboard-card">
+        <div class="card-body">
+            <div class="section-head section-pink mb-4">
+                <span class="section-icon">🔴</span>
+                <div>
+                    <h4 class="mb-0">Live Matches</h4>
+                    <small>Open live scoring directly</small>
+                </div>
+            </div>
+
+            {% if live_matches %}
+            <div class="row g-3">
+                {% for match in live_matches %}
+                <div class="col-md-6 col-lg-4">
+                    <a href="/matches/{{ match._id }}/scoring" class="text-decoration-none">
+                        <div class="match-box match-live h-100">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <span class="match-tag">{{ match.tournament_name if match.tournament_name else '-' }}</span>
+                                <span class="status-pill live-pill">LIVE</span>
+                            </div>
+                            <h5 class="mb-2">{{ match.team1_name }} vs {{ match.team2_name }}</h5>
+                            <div class="match-meta">
+                                <div><strong>Score:</strong> {{ match.score if match.score else '0/0' }}</div>
+                                <div><strong>Overs:</strong> {{ match.overs if match.overs else '0.0' }}</div>
+                                <div><strong>Date:</strong> {{ match.match_date if match.match_date else '-' }}</div>
+                                <div><strong>Round:</strong> {{ match.round_type if match.round_type else '-' }}</div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-box"><p class="mb-0">No live matches found.</p></div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card shadow-sm border-0 dashboard-card">
+        <div class="card-body">
+            <div class="section-head section-purple mb-4">
+                <span class="section-icon">📅</span>
+                <div>
+                    <h4 class="mb-0">Upcoming Matches</h4>
+                    <small>Open fixture details</small>
+                </div>
+            </div>
+
+            {% if upcoming_matches %}
+            <div class="dashboard-list">
+                {% for match in upcoming_matches %}
+                <a href="/matches/{{ match._id }}/details" class="dashboard-list-item text-decoration-none">
+                    <div>
+                        <div class="fw-semibold">{{ match.team1_name }} vs {{ match.team2_name }}</div>
+                        <small class="text-muted">{{ match.match_date if match.match_date else '-' }} • {{ match.match_time if match.match_time else '-' }} • {{ match.round_type if match.round_type else '-' }}</small>
+                    </div>
+                    <span class="status-pill upcoming-pill">UPCOMING</span>
+                </a>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-box"><p class="mb-0">No upcoming matches found.</p></div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
