@@ -14,7 +14,8 @@ import os
 import logging
 
 from app.init.db import db
-
+from pathlib import Path
+BASE_DIR = Path(__file__).resolve().parent
 logger = logging.getLogger(__name__)
 
 PLAYING_XI_COUNT = 9
@@ -32,8 +33,8 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 
-app.mount("/static", StaticFiles(directory="app/static"), name="static")
-templates = Jinja2Templates(directory="app/templates")
+app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
+templates = Jinja2Templates(directory=BASE_DIR / "templates")
 
 AWS_ACCESS_KEY_ID = "AKIAWVKUQO2GM4D53RHZ"
 AWS_SECRET_ACCESS_KEY = "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"
