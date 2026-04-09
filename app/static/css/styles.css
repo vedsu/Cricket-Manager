@@ -32,7 +32,9 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-
+body {
+    background: red !important;
+}
 body {
   background: var(--bg-app);
   font-family: Arial, sans-serif;
