@@ -32,9 +32,7 @@
 
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
-body {
-    background: red !important;
-}
+
 body {
   background: var(--bg-app);
   font-family: Arial, sans-serif;
@@ -542,8 +540,15 @@ aside { background: var(--surface); border-right: 1px solid #eee; }
 
 .action-section { margin-top: 12px; }
 
-.dashboard-page a { text-decoration: none; color: var(--text-strong); }
-.dashboard-page a:hover { color: #000; }
+/* .dashboard-page a { text-decoration: none; color: var(--text-strong); }
+.dashboard-page a:hover { color: #000; } */
+.dashboard-page a { text-decoration: none; }
+.dashboard-page a:not(.btn):not(.btn-dark):not(.btn-score) {
+  color: var(--text-strong);
+}
+.dashboard-page a:not(.btn):not(.btn-dark):not(.btn-score):hover {
+  color: #000;
+}
 .dashboard-page .text-primary, .dashboard-page .link-primary, .dashboard-page a.text-primary { color: #374151 !important; }
 
 .dashboard-list {
@@ -717,7 +722,49 @@ aside { background: var(--surface); border-right: 1px solid #eee; }
   border: 1px solid #e5e7eb !important;
   background: #fafafa !important;
 }
+/* Fix dark button/link text visibility */
+.btn,
+.btn:visited,
+.btn:hover,
+.btn:focus,
+.btn:active {
+  text-decoration: none;
+}
 
+.btn-dark,
+.btn-dark:visited,
+.btn-dark:hover,
+.btn-dark:focus,
+.btn-dark:active,
+a.btn-dark,
+a.btn-dark:visited,
+a.btn-dark:hover,
+a.btn-dark:focus,
+a.btn-dark:active {
+  color: #fff !important;
+}
+
+.btn-score,
+.btn-score:visited,
+.btn-score:hover,
+.btn-score:focus,
+.btn-score:active,
+a.btn-score,
+a.btn-score:visited,
+a.btn-score:hover,
+a.btn-score:focus,
+a.btn-score:active {
+  color: #fff !important;
+}
+
+.dashboard-page a.btn,
+.dashboard-page a.btn:hover,
+.dashboard-page a.btn-dark,
+.dashboard-page a.btn-dark:hover,
+.dashboard-page a.btn-score,
+.dashboard-page a.btn-score:hover {
+  color: #fff !important;
+}
 @media (max-width: 991.98px) {
   :root { --navbar-offset: 70px; }
 
@@ -805,4 +852,5 @@ aside { background: var(--surface); border-right: 1px solid #eee; }
   .dashboard-hero { border-radius: 16px; padding: 16px; }
   .dashboard-card, .card { border-radius: 16px; }
   .dashboard-list-item, .analytics-box, .mini-analytics-card { border-radius: 14px; }
+
 }
