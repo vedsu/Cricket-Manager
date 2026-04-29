@@ -36,8 +36,30 @@ app = FastAPI(lifespan=lifespan)
 app.mount("/static", StaticFiles(directory=BASE_DIR / "static"), name="static")
 templates = Jinja2Templates(directory=BASE_DIR / "templates")
 
-AWS_ACCESS_KEY_ID = "AKIAWVKUQO2GM4D53RHZ"
-AWS_SECRET_ACCESS_KEY = "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"
+secret_name = "aws-model"
+region_name = 'us-east-1'
+
+
+def get_secret(secret_name, region_name):
+    
+    try:
+
+        session = boto3.session.Session()
+        client = session.client(
+            service_name = "secret_manager",
+            region_name = region_name
+        )
+
+        response = client.get_secret_value(SecretId = secret_name)
+        secret_string = response["SecretString"]
+        return json.loads(secret_string)
+    
+    except Exception as e:
+        print(f"Error retrieving secret : {e}")
+        return {}
+
+secret_data = get_secret(secret_name, region_name)
+
 AWS_REGION = "us-east-1"
 AWS_S3_BUCKET_NAME = "webinarprof"
 AWS_S3_BASE_FOLDER = "cricket-manager"
@@ -47,8 +69,7 @@ if AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY and AWS_S3_BUCKET_NAME:
     s3_client = boto3.client(
         "s3",
         region_name=AWS_REGION,
-        aws_access_key_id=AWS_ACCESS_KEY_ID,
-        aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+        
     )
 
 
